@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "next start"
+  
   },
   "dependencies": {
     "@e2b/code-interpreter": "^1.5.1",
