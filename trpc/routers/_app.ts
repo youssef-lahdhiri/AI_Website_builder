@@ -22,7 +22,7 @@ export const appRouter = createTRPCRouter({
   .input(z.object({value:z.string()}))
   .query(async({input})=>{
     const project=await prisma.project.findFirst({where:{name:input.value}})
-    const messages=await prisma?.message.findMany({where:{projectId:project.id}})
+    const messages=await prisma?.message.findMany({where:{projectId:project?.id}})
   return messages}),
   project:baseProcedure.query(async()=>{
     const project=await prisma?.project.findFirst({where:{asb:1}})
