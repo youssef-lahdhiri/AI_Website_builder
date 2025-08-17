@@ -29,11 +29,7 @@ const MessageInput = ({ projectId, placeHolder }: messageInputProps) => {
     }
  },[])
     return ( 
-        //   <Input
-        //     className="w[calc(100%-20px)]"
-        //     value={value}
-        //     onChange={(e) => setValue(e.target.value)}
-        //   />
+ 
           <div className=" items-center flex  h-12 w-full   text-white !bg-[#231F45]">
           <Input 
            onChange={(e) => setValue(e.target.value)}

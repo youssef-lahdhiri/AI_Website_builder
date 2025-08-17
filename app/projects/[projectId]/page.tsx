@@ -74,6 +74,7 @@ export default function ClientGreeting() {
   }, [sc?.scrollHeight]);
   // setting messages 
   useEffect(() => {
+    setData([{ content: "", role: "", id: "" }])
     setData(messages);
   }, [messages]);
   const handelClick = async (value: string) => {
