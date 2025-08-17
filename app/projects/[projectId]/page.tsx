@@ -116,7 +116,7 @@ export default function ClientGreeting() {
           <MessageInput projectId={projectId} />
         </div>
       </div>
-
+// @ts-expect-error: excessive type instantiation
       {frag && typeof frag.files === "object" && frag.files !== null && (
         <div className=' w-[70vw]  overflow-hidden '>
           <Tabs defaultValue='preview' className='  '>
@@ -148,7 +148,7 @@ export default function ClientGreeting() {
       showLineNumbers={true} 
       wrapLines={true} 
     >
-      {code}
+      {String(code)}
     </SyntaxHighlighter>
                   </TabsContent>
                 ))}
