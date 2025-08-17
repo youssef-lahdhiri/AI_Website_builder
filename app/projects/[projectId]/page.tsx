@@ -87,7 +87,7 @@ export default function ClientGreeting() {
       <div className="!w-[30vw] border-[#0F0F1A] border-r-white  border-1 flex h-[100vh]">
         <div
           id="msg"
-          className="scroll-smooth flex flex-col overflow-y-hidden h-[95vh] gap-2   w-full"
+          className="scroll-smooth flex flex-col overflow-x-hidden h-[95vh] gap-2   w-full"
         >
           {dataa?.map((i) => (
             <div
