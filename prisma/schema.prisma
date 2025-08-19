@@ -14,14 +14,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 model Project{
-  asb Int? @default(autoincrement())
+  userId String 
   id String @id @default(uuid())
   name String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   messages Message[]
 }
-
 enum MessageRole {
 USER
 ASSISTANT

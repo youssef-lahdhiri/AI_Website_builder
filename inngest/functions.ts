@@ -10,11 +10,12 @@ export const helloWorld = inngest.createFunction(
   { id: "hello-world" },
   { event: "test/hello.world" },
   async ({ event,step }) => {
-    let project=await prisma.project.findFirst({where:{name:event.data.projectId}})
+    let project=await prisma.project.findFirst({where:{id:event.data.projectId}})
     if(!project){
       project=await prisma.project.create({
         data:{
           name:event.data.projectId,
+          userId:event.data.userId
         }
       })
     }
@@ -40,7 +41,7 @@ export const helloWorld = inngest.createFunction(
   const sandboxId= await step.run("get-sandbox-id",async()=>{
     const sandbox=await Sandbox.create( "next-js-test0-2")
     //change sandbox timeout 
-    // sandbox.setTimeout(900_000)
+    sandbox.setTimeout(900_000)
     return sandbox.sandboxId;
   }) 
  
@@ -49,9 +50,9 @@ export const helloWorld = inngest.createFunction(
       description:"an Expert coding agent  ",
 system:PROMPT,
       model: openai({model:"gpt-4.1",
-        defaultParameters:{
-          temperature:0.1,
-        }
+         
+          // temperature: 0.7,
+       
       }),
       tools:[
         createTool({

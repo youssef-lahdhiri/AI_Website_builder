@@ -4,11 +4,13 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { TRPCReactProvider } from "@/trpc/client";
 import { Space_Grotesk } from "next/font/google";
+// import { type Metadata } from 'next'
+import { ClerkProvider } from "@clerk/nextjs";
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
 //   subsets: ["latin"],
 // });
-
+import Header from "./header";
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
   subsets: ["latin"],
@@ -25,14 +27,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+      <ClerkProvider>
     <TRPCReactProvider>
     <html lang="en">
       <body
         className={` ${spaceGrotesk.variable} antialiased`}
-      >
+        >
+      <Header />
         {children}
         <Toaster />
       </body>
-    </html></TRPCReactProvider>
+    </html>
+    </TRPCReactProvider>
+    </ClerkProvider>
   );
 }
