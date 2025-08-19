@@ -1,6 +1,4 @@
 "use client";
-import ProjectsDropDownMenu from './projects-drop';
-import { RedirectToSignIn, SignIn } from '@clerk/nextjs';
 import { ArrowDown } from "lucide-react"
 import { Code2 } from 'lucide-react';
 import { Monitor } from 'lucide-react';
@@ -11,9 +9,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import "@/components/ui/code-view/code-theme.css";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { useState, useRef, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import If from "../../ifram";
@@ -27,9 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 // import getUser from './getUser';
-import type { User } from '@clerk/nextjs/server';
 import { UserButton, useUser } from '@clerk/nextjs';
-import { getExpectedRequestStore } from 'next/dist/server/app-render/work-unit-async-storage.external';
 export default function ClientGreeting() {
   const [userId,setUserId]=useState("a")
   const {user,isSignedIn,isLoaded}= useUser()
@@ -40,8 +34,7 @@ if(user)setUserId(user.id)
     router.push("/sign-in");
   }
 },[user,isLoaded,isSignedIn,router])
-  
-  // console.log(user)
+
   //loading message init
   const [index, setIndex] = useState(0);
   const waitingMessages = [
@@ -73,7 +66,6 @@ const { data: messages, isLoading: load } = useSuspenseQuery(
     }
   )
 );
-useEffect(()=>{console.log(projectId)},[projectId,messages])
 //looping waiting message index
 useEffect(() => {
   const id = setInterval(() => {
@@ -87,13 +79,15 @@ useEffect(() => {
   const { data: fragg, isLoading } = useSuspenseQuery(
     trpc.fragment.queryOptions(
       { value: id },
-      {
-        enabled: !!value,
-      }
+      // {
+      //   enabled: !!id,
+      // }
     )
     );
   const [frag,setFrag]=useState<typeof fragg>(null)
-  useEffect(()=>{setFrag(fragg)},[fragg])
+  useEffect(()=>{setFrag(fragg)
+    
+  },[fragg])
   useEffect(()=>{
     if(messages&&messages.length>0){
       if(messages[messages.length-1].role=="ASSISTANT"){setId(messages[messages.length-1].id)}
@@ -122,6 +116,10 @@ useEffect(() => {
       setUrl(frag.sandboxUrl);
     }
   };
+  useEffect(()=>{
+    // if(messages)setData(messages)
+      // if(fragg!=null)setFrag(fragg)
+  },[])
 const createProject = useMutation(trpc.project.mutationOptions({onSuccess:(newProject) => {
     if (newProject) {
       setProjectId(newProject.id)
@@ -144,10 +142,10 @@ const createProject = useMutation(trpc.project.mutationOptions({onSuccess:(newPr
             <DropdownMenuTrigger className=" text-center  ml-5 p-2 flex items-center justify-center ">
                 Projects <ArrowDown/>
             </DropdownMenuTrigger>
-            <DropdownMenuContent >
-        {projects?.map((p)=><DropdownMenuItem key={p.id} onSelect={(e)=>{setData(null);router.push(`/projects/${p.id}`)}}> {p.name}</DropdownMenuItem>
+            <DropdownMenuContent className='bg-black/70 text-white h-[40vh]' >
+        {projects?.map((p)=><DropdownMenuItem key={p.id} onSelect={(e)=>{router.push(`/projects/${p.id}`)}}> {p.name}</DropdownMenuItem>
 
-        )}
+)}
         <DropdownMenuItem onClick={async()=>await createProject.mutate({userId})}>New project </DropdownMenuItem>
             </DropdownMenuContent>
 
@@ -161,7 +159,7 @@ const createProject = useMutation(trpc.project.mutationOptions({onSuccess:(newPr
             >
               {i.content}
               {i.role === "ASSISTANT" && (
-                <Button className="ml-2" onClick={() => handelClick(i.id)}>
+                <Button className="ml-2 cursor-pointer" onClick={() => handelClick(i.id)}>
                   preview
                 </Button>
               )}
@@ -180,8 +178,8 @@ const createProject = useMutation(trpc.project.mutationOptions({onSuccess:(newPr
         </div>
       </div>
               <div className=' w-[69vw] mr-2 border-[rgba(255,255,255,0.09)] border-1 bg-[#1A1A28] h-[85vh] rounded-md  overflow-hidden '>
-
-      {frag && typeof frag.files === "object" && frag.files !== null && (
+ 
+      {frag!=null  && (
         // <div className=' w-[69vw] mr-2 border-[rgba(255,255,255,0.09)] border-1 bg-[#1A1A28] h-[85vh] rounded-md  overflow-hidden '>
           <Tabs defaultValue='preview' className='  '>
             <TabsList className='bg-black text-center'>
