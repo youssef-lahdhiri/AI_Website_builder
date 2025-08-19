@@ -16,22 +16,22 @@ const Nav = () => {
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuLink asChild> 
-            <Link href='/zeb'>Home</Link>
+            <Link href='/'>Home</Link>
              </NavigationMenuLink>
            </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild> 
-            <Link href='/zeb'>Features</Link>
+            <Link href='/'>Features</Link>
              </NavigationMenuLink>
            </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild> 
-            <Link href='/zeb'>Suggestions</Link>
+            <Link href='/'>Suggestions</Link>
              </NavigationMenuLink>
            </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild> 
-            <Link href='/zeb'>Join</Link>
+            <Link href='/sign-in'>Join</Link>
              </NavigationMenuLink>
            </NavigationMenuItem>
       

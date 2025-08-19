@@ -74,25 +74,26 @@ const { data: messages, isLoading: load } = useSuspenseQuery(
   )
 );
 useEffect(()=>{console.log(projectId)},[projectId,messages])
-  //looping waiting message index
-  useEffect(() => {
-    const id = setInterval(() => {
-      setIndex((prev) => (prev + 1) % waitingMessages.length);
-    }, 3000);
-    return () => clearInterval(id);
-  }, [load]);
+//looping waiting message index
+useEffect(() => {
+  const id = setInterval(() => {
+    setIndex((prev) => (prev + 1) % waitingMessages.length);
+  }, 3000);
+  return () => clearInterval(id);
+}, [load]);
   //fetching sandboxUrl
   const [id, setId] = useState("");
   const [value, setValue] = useState("");
-  const { data: frag, isLoading } = useSuspenseQuery(
+  const { data: fragg, isLoading } = useSuspenseQuery(
     trpc.fragment.queryOptions(
       { value: id },
       {
         enabled: !!value,
       }
     )
-  );
-  // const [frag,setFrag]=useState(null)
+    );
+  const [frag,setFrag]=useState<typeof fragg>(null)
+  useEffect(()=>{setFrag(fragg)},[fragg])
   useEffect(()=>{
     if(messages&&messages.length>0){
       if(messages[messages.length-1].role=="ASSISTANT"){setId(messages[messages.length-1].id)}
@@ -140,11 +141,11 @@ const createProject = useMutation(trpc.project.mutationOptions({onSuccess:(newPr
           className="scroll-smooth t flex flex-col h-[70vh] overflow-y-auto gap-2   w-full"
         ><div className='sticky top-0 z-10 bg-black/70 '>
              <DropdownMenu >
-            <DropdownMenuTrigger className="flex items-center justify-center ">
+            <DropdownMenuTrigger className=" text-center  ml-5 p-2 flex items-center justify-center ">
                 Projects <ArrowDown/>
             </DropdownMenuTrigger>
             <DropdownMenuContent >
-        {projects?.map((p)=><DropdownMenuItem key={p.id} onSelect={(e)=>{router.push(`/projects/${p.id}`)}}> {p.name}</DropdownMenuItem>
+        {projects?.map((p)=><DropdownMenuItem key={p.id} onSelect={(e)=>{setData(null);router.push(`/projects/${p.id}`)}}> {p.name}</DropdownMenuItem>
 
         )}
         <DropdownMenuItem onClick={async()=>await createProject.mutate({userId})}>New project </DropdownMenuItem>
@@ -167,7 +168,7 @@ const createProject = useMutation(trpc.project.mutationOptions({onSuccess:(newPr
             </div>
           ))}
           <div>
-            {dataa&&dataa.length>1&&dataa[dataa.length - 1].role == "USER" && (
+            {dataa&&dataa.length>0&&dataa[dataa.length - 1].role == "USER" && (
               <div className="animate-[fade_3s_ease-in-out_infinite] opacity-10">
                 {waitingMessages[index]}
               </div>
@@ -178,8 +179,10 @@ const createProject = useMutation(trpc.project.mutationOptions({onSuccess:(newPr
           <MessageInput userId={userId} projectId={projectId} />
         </div>
       </div>
+              <div className=' w-[69vw] mr-2 border-[rgba(255,255,255,0.09)] border-1 bg-[#1A1A28] h-[85vh] rounded-md  overflow-hidden '>
+
       {frag && typeof frag.files === "object" && frag.files !== null && (
-        <div className=' w-[69vw] mr-2 border-[rgba(255,255,255,0.09)] border-1 bg-[#1A1A28] h-[85vh] rounded-md  overflow-hidden '>
+        // <div className=' w-[69vw] mr-2 border-[rgba(255,255,255,0.09)] border-1 bg-[#1A1A28] h-[85vh] rounded-md  overflow-hidden '>
           <Tabs defaultValue='preview' className='  '>
             <TabsList className='bg-black text-center'>
               <TabsTrigger className='' value="code"><Code2/> Code</TabsTrigger>
@@ -220,8 +223,8 @@ const createProject = useMutation(trpc.project.mutationOptions({onSuccess:(newPr
               {!isLoading && <If url={frag.sandboxUrl} />}
             </TabsContent>
           </Tabs>
-        </div>
       )}
+        </div>
       
     </div>
     </div>

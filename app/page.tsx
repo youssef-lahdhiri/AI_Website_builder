@@ -70,7 +70,7 @@ return ()=>clearTimeout(id)
             <div className=" blur-xl absolute right-[15%] top-[20%] size-40 rounded-full bg-[#3B4A45]"></div>
             <div className=" absolute left-[15%] bottom-[20%]  size-40 rounded-full blur-xl bg-[#543D5D]/79"> </div>
        </div>
-       <div className=" items-center flex absolute bottom-[28%] h-12 w-1/2 z-10 text-white bg-[#27234D]">
+       <div className=" items-center flex absolute bottom-[28%] h-12 w-1/2 z-10 text-white ">
           <MessageInput userId={user?user.id:"a"} placeHolder={placeholder} projectId=""/>
            </div>
             <h1 className={`font-bold text-9xl absolute z-10 text-center text-white top-55`}>AI-Powered <br />Site Builder⚡</h1>

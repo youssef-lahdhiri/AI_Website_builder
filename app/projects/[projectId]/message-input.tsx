@@ -32,7 +32,7 @@ const MessageInput = ({ projectId, placeHolder,userId }: messageInputProps) => {
           <Input 
            onChange={(e) => setValue(e.target.value)}
 value={value}
-          className=" w-2/3 h-full  !bg-[#231F45] " 
+          className=" w-4/5 h-full  !bg-[#231F45] " 
          placeholder={placeHolder ?? "Ask genie to do something "}
            />
           <button onClick={async () => {

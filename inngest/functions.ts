@@ -6,6 +6,7 @@ import { getSandbox, lastAssistanTextMessageContext } from "./utlis";
 import prisma from "@/lib/db";
 import { z } from "zod";
 import { PROMPT } from "@/prompt";
+import { create } from "domain";
 export const helloWorld = inngest.createFunction(
   { id: "hello-world" },
   { event: "test/hello.world" },
@@ -44,8 +45,22 @@ export const helloWorld = inngest.createFunction(
     sandbox.setTimeout(900_000)
     return sandbox.sandboxId;
   }) 
- 
-     const codeAgent=createAgent({
+ const nameCodingAgent=createAgent({
+  name:"summarize ",
+  description:"an Expert summarizer",
+  system:"summarize this text in 3 words",
+  model:openai({model:"gpt-4o-mini"})
+ })
+ if(project.name==project.id){}
+
+ const summarize =await nameCodingAgent.run(event.data.value)
+await prisma.project.update({
+  where: { id: project.id },
+  data: { name: (summarize.output[0] as { content: string }).content },
+
+}); 
+
+  const codeAgent=createAgent({
       name: "code agent",
       description:"an Expert coding agent  ",
 system:PROMPT,
