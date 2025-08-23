@@ -3,7 +3,7 @@ import { inngest } from '@/inngest/client';
 import prisma from '@/lib/db';
 import {createTRPCRouter, baseProcedure} from '../init';
 import { Input } from '@/components/ui/input';
-export const appRouter = createTRPCRouter({
+export const appRouter = createTRPCRouter({ 
   allProjects:baseProcedure.input(z.object({userId:z.string().min(0,"invalid User ID")}))
   .query(async({input})=>{
     const projects= await prisma.project.findMany({where:{userId:input.userId}})
@@ -31,10 +31,15 @@ export const appRouter = createTRPCRouter({
     const project=await prisma.project.findFirst({where:{id:input.value}})
     const messages=await prisma?.message.findMany({where:{projectId:project?.id}})
   return messages}),
-  project:baseProcedure.input(z.object({userId:z.string()}))
+  project:baseProcedure.input(z.object({userId:z.string(),projectId:z.string()}))
   .mutation(async({input})=>{
-    const project=await prisma.project.create({data:{userId:input.userId,name:input.userId}})
- return project
+    const findProject=await prisma.project.findFirst({where:{id:input.projectId}})
+    if(! findProject){
+      const project=await prisma.project.create({data:{userId:input.userId,name:input.userId}});
+       return project
+      }
+    return findProject
+
   }),
   invoke: baseProcedure.input(z.object({projectId:z.string(),userId:z.string(), value: z.string() })).mutation(async ({ input  }) => {
     // await prisma.message.create({data:{content:input.value,type:"RESULT",role:"USER"}})

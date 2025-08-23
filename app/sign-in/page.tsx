@@ -7,7 +7,7 @@ export default function Page() {
         <div>Email: test+clerk_test@test.com</div>
       <div>Password: testbuildifyai</div>
       </div>
-      <SignIn />
+      <SignIn/>
     </div>
   );
 }

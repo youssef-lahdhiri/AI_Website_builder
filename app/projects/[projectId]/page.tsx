@@ -24,20 +24,24 @@ import {
 } from "@/components/ui/dropdown-menu"
 // import getUser from './getUser';
 import { UserButton, useUser } from '@clerk/nextjs';
-export default function ClientGreeting() {
-  const [userId,setUserId]=useState("a")
+import { createTRPCProxyClient } from "@trpc/client";
+export default   function ClientGreeting({params}:any) {
+  // const aa= await params.projectId
+  // console.log(aa)
+  const [userId,setUserId]= useState("a")
   const {user,isSignedIn,isLoaded}= useUser()
   const router=useRouter()
-useEffect(()=>{
-if(user)setUserId(user.id)
-  if (isLoaded && !isSignedIn) {
-    router.push("/sign-in");
-  }
-},[user,isLoaded,isSignedIn,router])
-
-  //loading message init
-  const [index, setIndex] = useState(0);
-  const waitingMessages = [
+  useEffect(()=>{
+    if(!user)router.push("/")
+    if(user)setUserId(user.id)
+    if (isLoaded && !isSignedIn) {
+        router.push("/sign-in");
+      }
+    },[user,isLoaded,isSignedIn,router])
+    
+    //loading message init
+    const [index, setIndex] = useState(0);
+    const waitingMessages = [
     "Analyzing your ideas…",
     "Summoning pixels and code…",
     "Turning your vision into reality…",
@@ -48,46 +52,53 @@ if(user)setUserId(user.id)
   //fetching all projects 
   const {data:projects}= useSuspenseQuery(trpc.allProjects.queryOptions({userId:userId},{refetchInterval:3000}))
   //adding msg to db
-
+//    const aaa=await useSuspenseQuery(trpc.project.queryOptions({projectId:aa,userId:userId}))
+//   useEffect(()=>{
+//     console.log("new id is :",aaa.data.id)
+//     // router.push(`/projects/${aaa.data?.id}`)
+// },[])
   //getting project Id 
   const [projectId,setProjectId]=useState("")
   const path=usePathname()
-useEffect(() => {
-  setProjectId(path.substring(path.indexOf("/projects/")+"/projects/".length))
-  return()=>clearInterval(id)
-}, [ path]);
-//fetching messages
-const { data: messages, isLoading: load } = useSuspenseQuery(
-  trpc.message.queryOptions(
-    { value: projectId },
-    {
-      enabled:!!projectId,
-      refetchInterval: 3000,
-    }
-  )
-);
-//looping waiting message index
-useEffect(() => {
-  const id = setInterval(() => {
-    setIndex((prev) => (prev + 1) % waitingMessages.length);
-  }, 3000);
-  return () => clearInterval(id);
-}, [load]);
+  // const project=trpc.project.mutationOptions({})
+  //fetching messages
+  const { data: messages, isLoading: load } = useSuspenseQuery(
+    trpc.message.queryOptions(
+      { value: projectId },
+      {
+        enabled:!!projectId,
+        refetchInterval: 3000,
+      }
+    )
+  );
+  //looping waiting message index
+  useEffect(() => {
+    const id = setInterval(() => {
+      setIndex((prev) => (prev + 1) % waitingMessages.length);
+    }, 3000);
+    return () => clearInterval(id);
+  }, [load]);
   //fetching sandboxUrl
   const [id, setId] = useState("");
   const [value, setValue] = useState("");
   const { data: fragg, isLoading } = useSuspenseQuery(
     trpc.fragment.queryOptions(
       { value: id },
-      // {
-      //   enabled: !!id,
-      // }
+      
     )
-    );
+  );
   const [frag,setFrag]=useState<typeof fragg>(null)
   useEffect(()=>{setFrag(fragg)
     
   },[fragg])
+  useEffect(() => {
+    setId("")
+    setFrag(null)
+ 
+    createProject.mutate({userId:userId,projectId:path.substring(path.indexOf("/projects/")+"/projects/".length)})
+    setProjectId(path.substring(path.indexOf("/projects/")+"/projects/".length))
+    return()=>clearInterval(id)
+  }, [ path]);
   useEffect(()=>{
     if(messages&&messages.length>0){
       if(messages[messages.length-1].role=="ASSISTANT"){setId(messages[messages.length-1].id)}
@@ -125,6 +136,7 @@ const createProject = useMutation(trpc.project.mutationOptions({onSuccess:(newPr
       setProjectId(newProject.id)
       router.push(`/projects/${newProject.id}`);
     }}}))
+  //  console.log( createProject)
   return (
   <div className='bg-[#0F0F1A] h-[100vh] '>
     <div className='border-b-[rgba(255,255,255,0.09)] h-[10vh] w-full border-1 border-transparent flex  items-center'>
@@ -146,7 +158,7 @@ const createProject = useMutation(trpc.project.mutationOptions({onSuccess:(newPr
         {projects?.map((p)=><DropdownMenuItem key={p.id} onSelect={(e)=>{router.push(`/projects/${p.id}`)}}> {p.name}</DropdownMenuItem>
 
 )}
-        <DropdownMenuItem onClick={async()=>await createProject.mutate({userId})}>New project </DropdownMenuItem>
+        <DropdownMenuItem onClick={async()=>await  createProject.mutate({userId,projectId:""})}>New project </DropdownMenuItem>
             </DropdownMenuContent>
 
         </DropdownMenu></div>
@@ -179,7 +191,7 @@ const createProject = useMutation(trpc.project.mutationOptions({onSuccess:(newPr
       </div>
               <div className=' w-[69vw] mr-2 border-[rgba(255,255,255,0.09)] border-1 bg-[#1A1A28] h-[85vh] rounded-md  overflow-hidden '>
  
-      {frag!=null  && (
+      {id!=""&&frag!=null  && (
         // <div className=' w-[69vw] mr-2 border-[rgba(255,255,255,0.09)] border-1 bg-[#1A1A28] h-[85vh] rounded-md  overflow-hidden '>
           <Tabs defaultValue='preview' className='  '>
             <TabsList className='bg-black text-center'>

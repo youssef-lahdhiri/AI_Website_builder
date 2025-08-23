@@ -9,7 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import {useRouter} from "next/navigation";
 import generateUniqueId from "generate-unique-id";
-
+import { useRef } from "react";
 interface messageInputProps{
     projectId:string,
     placeHolder?:string
@@ -17,27 +17,37 @@ interface messageInputProps{
 }
 
 const MessageInput = ({ projectId, placeHolder,userId }: messageInputProps) => {
-    
+    const but=useRef<HTMLButtonElement>(null)
     const [newId,setNewId]=useState(projectId)
     const router=useRouter()
     const [value,setValue]=useState("")
     const trpc= useTRPC()
   const invoke = useMutation(trpc.invoke.mutationOptions({}));
   const project= useMutation(trpc.project.mutationOptions({}))
-
+  const handelKeyDown=(event: KeyboardEvent)=>{
+    if(event.key=="Enter"){but.current?.click()}
+    
+  }
+useEffect(()=>{
+ window.addEventListener("keydown",handelKeyDown)
+  return()=>window.removeEventListener("keydown",handelKeyDown)
+},[])
  
     return ( 
  
           <div className=" items-center flex justify-center gap-3  h-12 w-full   text-white ">
           <Input 
            onChange={(e) => setValue(e.target.value)}
-value={value}
+          value={value}
           className=" w-4/5 h-full  !bg-[#231F45] " 
          placeholder={placeHolder ?? "Ask genie to do something "}
            />
-          <button onClick={async () => {
+          <button
+          ref={but}
+         
+          onClick={async () => {
               toast.success("Button clicked!");
-             if(projectId=="") {const id =await project.mutateAsync({userId:userId});
+             if(projectId=="") {const id =await project.mutateAsync({userId:userId,projectId:""});
              
              await invoke.mutateAsync({ projectId:id.id, value: value,userId:userId });
                            router.push(`/projects/${id.id}`)
