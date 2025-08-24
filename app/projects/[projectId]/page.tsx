@@ -28,8 +28,9 @@ import { createTRPCProxyClient } from "@trpc/client";
 export default   function ClientGreeting({params}:any) {
   // const aa= await params.projectId
   // console.log(aa)
-  const [userId,setUserId]= useState("a")
+  const [userId,setUserId]= useState("")
   const {user,isSignedIn,isLoaded}= useUser()
+
   const router=useRouter()
   useEffect(()=>{
     if(!user)router.push("/")
@@ -37,6 +38,7 @@ export default   function ClientGreeting({params}:any) {
     if (isLoaded && !isSignedIn) {
         router.push("/sign-in");
       }
+      console.log("user is ",user)
     },[user,isLoaded,isSignedIn,router])
     
     //loading message init
@@ -98,7 +100,7 @@ export default   function ClientGreeting({params}:any) {
     createProject.mutate({userId:userId,projectId:path.substring(path.indexOf("/projects/")+"/projects/".length)})
     setProjectId(path.substring(path.indexOf("/projects/")+"/projects/".length))
     return()=>clearInterval(id)
-  }, [ path]);
+  }, [ userId,path]);
   useEffect(()=>{
     if(messages&&messages.length>0){
       if(messages[messages.length-1].role=="ASSISTANT"){setId(messages[messages.length-1].id)}

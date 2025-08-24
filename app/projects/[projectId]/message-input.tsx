@@ -46,7 +46,7 @@ useEffect(()=>{
           ref={but}
          
           onClick={async () => {
-              toast.success("Button clicked!");
+              toast.success("Message sent!");
              if(projectId=="") {const id =await project.mutateAsync({userId:userId,projectId:""});
              
              await invoke.mutateAsync({ projectId:id.id, value: value,userId:userId });
