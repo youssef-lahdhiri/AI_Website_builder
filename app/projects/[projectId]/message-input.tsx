@@ -46,6 +46,7 @@ useEffect(()=>{
           ref={but}
          
           onClick={async () => {
+            localStorage.setItem("temporary-prompt",value)
               toast.success("Message sent!");
              if(projectId=="") {const id =await project.mutateAsync({userId:userId,projectId:""});
              

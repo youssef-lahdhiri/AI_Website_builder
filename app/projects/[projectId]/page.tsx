@@ -36,7 +36,7 @@ export default   function ClientGreeting({params}:any) {
     if(!user)router.push("/")
     if(user)setUserId(user.id)
     if (isLoaded && !isSignedIn) {
-        router.push("/sign-in/1");
+        router.push("/sign-in");
       }
       console.log("user is ",user)
     },[user,isLoaded,isSignedIn])
@@ -70,7 +70,7 @@ export default   function ClientGreeting({params}:any) {
       {
         enabled:!!projectId,
         refetchInterval: 3000,
-      }
+      } 
     )
   );
   //looping waiting message index
@@ -152,7 +152,7 @@ const createProject = useMutation(trpc.project.mutationOptions({onSuccess:(newPr
           id="msg"
           className="scroll-smooth t flex flex-col h-[70vh] overflow-y-auto gap-2   w-full"
         ><div className='sticky top-0 z-10 bg-black/70 '>
-             <DropdownMenu >
+             <DropdownMenu  >
             <DropdownMenuTrigger className=" text-center  ml-5 p-2 flex items-center justify-center ">
                 Projects <ArrowDown/>
             </DropdownMenuTrigger>
