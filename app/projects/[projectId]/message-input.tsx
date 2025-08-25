@@ -52,13 +52,13 @@ useEffect(()=>{
       router.push('/sign-in')}
             
            else{  toast.success("Message sent!");;
-              if(projectId=="") {const id =await project.mutateAsync({userId:userId,projectId:""});
+              if(projectId=="") {const id = await project.mutateAsync({userId:userId,projectId:""});
              
-             await invoke.mutateAsync({ projectId:id.id, value: value,userId:userId });
+              invoke.mutate({ projectId:id.id, value: value,userId:userId });
                            router.push(`/projects/${id.id}`)
 
              }else{
-                           await invoke.mutate({ projectId:projectId, value: value,userId:userId });
+                            invoke.mutate({ projectId:projectId, value: value,userId:userId });
 
                            router.push(`/projects/${projectId}`)
              }

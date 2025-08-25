@@ -8,7 +8,7 @@ export const appRouter = createTRPCRouter({
   .query(async({input})=>{
     const projects= await prisma.project.findMany({where:{userId:input.userId}})
     if(!projects)return null
-    return projects
+    return projects.reverse()
   }),
   msgCreate:baseProcedure.input
   (z.object({id:z.string(),content:z.string().min(1,"write a valid message")})).query(async({input})=>{
