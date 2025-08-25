@@ -36,10 +36,10 @@ export default   function ClientGreeting({params}:any) {
     if(!user)router.push("/")
     if(user)setUserId(user.id)
     if (isLoaded && !isSignedIn) {
-        router.push("/sign-in");
+        router.push("/sign-in/1");
       }
       console.log("user is ",user)
-    },[user,isLoaded,isSignedIn,router])
+    },[user,isLoaded,isSignedIn])
     
     //loading message init
     const [index, setIndex] = useState(0);
