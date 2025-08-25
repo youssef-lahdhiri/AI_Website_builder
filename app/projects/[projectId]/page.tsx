@@ -32,6 +32,7 @@ export default   function ClientGreeting({params}:any) {
   const {user,isSignedIn,isLoaded}= useUser()
 
   const router=useRouter()
+ 
   useEffect(()=>{
     if(!user)router.push("/")
     if(user)setUserId(user.id)
@@ -129,6 +130,13 @@ export default   function ClientGreeting({params}:any) {
       setUrl(frag.sandboxUrl);
     }
   };
+   useEffect(()=>{
+    const prompt=localStorage.getItem("temporary-prompt")
+    if(prompt&&user){
+      invoke.mutate({value:prompt,userId:user?.id,projectId:""})
+      localStorage.removeItem("temporary-prompt")
+    }
+  },[])
   useEffect(()=>{
     // if(messages)setData(messages)
       // if(fragg!=null)setFrag(fragg)

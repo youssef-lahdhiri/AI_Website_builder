@@ -17,9 +17,10 @@ interface messageInputProps{
 }
 
 const MessageInput = ({ projectId, placeHolder,userId }: messageInputProps) => {
+  const router=useRouter()
+
     const but=useRef<HTMLButtonElement>(null)
     const [newId,setNewId]=useState(projectId)
-    const router=useRouter()
     const [value,setValue]=useState("")
     const trpc= useTRPC()
   const invoke = useMutation(trpc.invoke.mutationOptions({}));
@@ -46,9 +47,12 @@ useEffect(()=>{
           ref={but}
          
           onClick={async () => {
-            localStorage.setItem("temporary-prompt",value)
-              toast.success("Message sent!");
-             if(projectId=="") {const id =await project.mutateAsync({userId:userId,projectId:""});
+            if(userId==""){
+      localStorage.setItem("temporary-prompt",value);
+      router.push('/sign-in')}
+            
+           else{  toast.success("Message sent!");;
+              if(projectId=="") {const id =await project.mutateAsync({userId:userId,projectId:""});
              
              await invoke.mutateAsync({ projectId:id.id, value: value,userId:userId });
                            router.push(`/projects/${id.id}`)
@@ -58,7 +62,7 @@ useEffect(()=>{
 
                            router.push(`/projects/${projectId}`)
              }
-              setValue("")
+              setValue("")}
             }} className=" cursor-pointer text-center m-1 bg-black h-full w-12 flex items-center justify-center rounded-md"> <SendIcon 
           
             // className=" absolute right-1 border rounded-full size-7 text-center cursor-pointer text-[#020014] bg-white  "/>

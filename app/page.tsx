@@ -20,7 +20,7 @@ const spaceGrotesk=Space_Grotesk({
   variable:"--font-space-grotesk"
 })
 const Page = () => {
-  const {user}=useUser()
+  const {user,isLoaded,isSignedIn}=useUser()
     const [value,setValue]=useState("")
     const recommendations=[
         "Build a Landing Page for My Startup .",
@@ -71,7 +71,7 @@ return ()=>clearTimeout(id)
             <div className=" absolute left-[15%] bottom-[20%]  size-40 rounded-full blur-xl bg-[#543D5D]/79"> </div>
        </div>
        <div className=" items-center flex absolute bottom-[28%] h-12 w-1/2 z-10 text-white ">
-          <MessageInput userId={user?user.id:"a"} placeHolder={placeholder} projectId=""/>
+          <MessageInput userId={user?user.id:""} placeHolder={placeholder} projectId=""/>
            </div>
             <h1 className={`font-bold text-9xl absolute z-10 text-center text-white top-55`}>AI-Powered <br />Site Builder⚡</h1>
         </div>
